@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+     layout:decorate="~{include/layout}">
+	<th:block layout:fragment="content">
+		<div class="container-fluid">
+			<form>
+			    <div class="mb-3">
+				  <label for="articleFormControlInput1" class="form-label">제목</label>
+				  <input type="text" class="form-control" id="articleFormControlInput1" placeholder="제목을 입력하세요.">
+				</div>
+				<div class="mb-3">
+				  <label for="articleFormControlTextarea1" class="form-label">내용</label>
+				  <textarea class="form-control" id="articleFormControlTextarea1" rows="3"></textarea>
+				</div>
+				<div class="mb-3 float-right text-end">
+					<button type="submit" class="btn btn-primary">등록</button>
+				</div>
+			</form>			
+		</div>
+    </th:block>
+</html>

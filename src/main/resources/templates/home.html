@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+     layout:decorate="~{include/layout}">
+	<th:block layout:fragment="content">
+	    <button type="button" class="btn btn-primary" 
+	    	th:onclick="|location.href='@{/article/create}'|">
+	    	등록
+    	</button>
+    </th:block>
+</html>
