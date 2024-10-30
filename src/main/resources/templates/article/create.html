@@ -4,19 +4,58 @@
      layout:decorate="~{include/layout}">
 	<th:block layout:fragment="content">
 		<div class="container-fluid">
-			<form>
+			<form id="articleCreateForm">
 			    <div class="mb-3">
-				  <label for="articleFormControlInput1" class="form-label">제목</label>
-				  <input type="text" class="form-control" id="articleFormControlInput1" placeholder="제목을 입력하세요.">
+				  <label for="articleFormControlInput1" class="form-label">
+				  	제목
+			  	</label>
+				  <input type="text" class="form-control" name="title"
+				  id="articleFormControlInput1" placeholder="제목을 입력하세요.">
 				</div>
 				<div class="mb-3">
-				  <label for="articleFormControlTextarea1" class="form-label">내용</label>
-				  <textarea class="form-control" id="articleFormControlTextarea1" rows="3"></textarea>
+				  <label for="articleFormControlTextarea1" class="form-label">
+				  	내용
+			  	</label>
+				  <textarea class="form-control" name="content"
+				  id="articleFormControlTextarea1" rows="3"></textarea>
 				</div>
 				<div class="mb-3 float-right text-end">
-					<button type="submit" class="btn btn-primary">등록</button>
+					<button type="submit" class="btn btn-primary">
+						등록
+					</button>
 				</div>
 			</form>			
 		</div>
+		<script>
+			const form = document.getElementById('articleCreateForm');
+			form.addEventListener('submit',(e)=>{
+				e.preventDefault();
+				let vali_check = false;
+				let vali_text='';
+				if(form.title.value == ''){
+					vali_text += '제목을 입력하세요.';
+					form.title.focus();
+				} else if(form.content.value == ''){
+					vali_text += '내용을 입력하세요.';
+					form.content.focus();
+				} else{
+					vali_check = true;
+				}
+				
+				if(vali_check == false){
+					alert(vali_text);
+				} else{
+					const payload = new FormData(form);
+					fetch('/article/create',{
+						method : 'post',
+						body : payload
+					})
+					.then(response => response.json())
+					.then(data => {
+						alert(data.res_msg);
+					})
+				}
+			})
+		</script>
     </th:block>
 </html>
