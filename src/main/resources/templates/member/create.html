@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+     layout:decorate="~{include/layout}">
+	<th:block layout:fragment="content">
+		<div class="container-fluid">
+			<form id="memberCreateForm">
+			    <div class="mb-3">
+				  <label for="memberFormControlInput1" class="form-label">
+				  	이메일
+				  </label>
+				  <input type="email" class="form-control" name="email"
+				  id="memberFormControlInput1" placeholder="hong_gd@abc.com">
+				</div>
+				<div class="mb-3">
+				  <label for="memberFormControlInput2" class="form-label">
+				  	비밀번호
+				  </label>
+				  <input type="password" class="form-control" name="password"
+				  id="memberFormControlInput2">
+				</div>
+				<div class="mb-3 float-right text-end">
+					<button type="submit" class="btn btn-primary">
+						회원가입
+					</button>
+				</div>
+			</form>			
+		</div>
+		<script>
+			const form = document.getElementById('memberCreateForm');
+			form.addEventListener('submit',(e)=>{
+				e.preventDefault();
+				// 1. 유효성 검사
+				let vali_check = false;
+				let vali_text = '';
+				if(form.email.value == ''){
+					vali_text += '이메일을 입력하세요.';
+					form.email.focus();
+				} else if(form.password.value == ''){
+					vali_text += '비밀번호를 입력하세요.';
+					form.password.focus();
+				} else{
+					vali_check = true;
+				}
+				// 2. 회원 정보 등록
+				if(vali_check == false){
+					alert(vali_text);
+				} else {
+					const payload = new FormData(form);
+					fetch('/member/create',{
+						method : 'post',
+						body : payload
+					})
+					.then(response => response.json())
+					.then(data => {
+						alert(data.res_msg);
+						if(data.res_code == '200'){
+							location.href="/";
+						}
+					})
+				}
+			})
+		</script>
+    </th:block>
+</html>

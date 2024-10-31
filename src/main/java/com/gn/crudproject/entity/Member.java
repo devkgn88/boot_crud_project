@@ -12,20 +12,20 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name="article")
+@Table(name="member")
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @Getter
-public class Article {
+public class Member {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column
-	private String title;
+	private String email;
 	
 	@Column
-	private String content;
+	private String password;
 }
