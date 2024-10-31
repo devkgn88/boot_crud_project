@@ -3,6 +3,8 @@ package com.gn.crudproject.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,10 @@ public class ArticleController {
 	
 	@Autowired
 	private ArticleRepository articleRepository;
+
+	private Logger logger 
+	= LoggerFactory.getLogger(ArticleController.class);
+	
 	
 	@GetMapping("/article/create")
 	public String createArticleView() {
@@ -36,12 +42,12 @@ public class ArticleController {
 		// 1. DTO를 엔티티로 변환
 		Article article = dto.toEntity();
 		// DTO가 엔티티로 잘 변환되었는지 확인
-		System.out.println(article);
+		logger.info(article.toString());
 		
 		// 2. 레퍼지토리로 엔티티를 DB에 저장
 		Article saved = articleRepository.save(article);
 		// article에 DB에 잘 저장되는지 확인
-		System.out.println(article);
+		logger.info(article.toString());
 		
 		if(saved.getId() != null) {
 			resultMap.put("res_code", "200");
