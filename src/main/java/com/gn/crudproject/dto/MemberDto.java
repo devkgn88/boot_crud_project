@@ -19,7 +19,7 @@ public class MemberDto {
 	private String password;
 	
 	public Member toEntity() {
-		return new Member(null,email,password);
+		return new Member(null,email,password,null,null);
 	}
 
 }
