@@ -18,6 +18,6 @@ public class ArticleDto {
 	private String content;	// 내용
 	
 	public Article toEntity() {
-		return new Article(null,title,content);
+		return new Article(null,title,content,null,null);
 	}
 }
