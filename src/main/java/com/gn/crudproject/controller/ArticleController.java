@@ -2,6 +2,7 @@ package com.gn.crudproject.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -88,6 +90,16 @@ public class ArticleController {
 		
 		// 3. 뷰 페이지 설정하기
 		return "article/list";
+	}
+	
+	// 게시글 단일 조회
+	@GetMapping("/article/{id}")
+	public String selectArticleOne(@PathVariable("id") Long id,
+			Model model) {
+		// logger.info("게시글 단일 조회 : "+id);
+		Article articleEntity = articleRepository.findById(id).orElse(null);
+		model.addAttribute("article",articleEntity);
+		return "article/detail";
 	}
 	
 	

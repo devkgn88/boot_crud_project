@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+     layout:decorate="~{include/layout}">
+	<th:block layout:fragment="content">
+		<div class="container-fluid">
+			<form id="articleUpdateForm" th:object="${article}">
+			    <div class="mb-3">
+				  <label for="articleFormControlInput1" class="form-label">
+				  	제목
+			  	</label>
+				  <input type="text" class="form-control" name="title"
+				  id="articleFormControlInput1" th:field="*{title}">
+				</div>
+				<div class="mb-3">
+				  <label for="articleFormControlTextarea1" class="form-label">
+				  	내용
+			  	</label>
+				  <textarea class="form-control" name="content"
+				  id="articleFormControlTextarea1" rows="3" th:field="*{content}"></textarea>
+				</div>
+				<div class="mb-3 float-right text-end">
+					<button type="submit" class="btn btn-primary">
+						수정
+					</button>
+				</div>
+			</form>	
+		</div>
+    </th:block>
+</html>
