@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+     layout:decorate="~{include/layout}">
+	<th:block layout:fragment="content">
+		<div class="container-fluid">
+			<form id="articleUpdateForm" th:object="${article}">
+				<input type="hidden" name="id" th:field="*{id}">
+			    <div class="mb-3">
+				  <label for="articleFormControlInput1" class="form-label">
+				  	제목
+			  	</label>
+				  <input type="text" class="form-control" name="title"
+				  id="articleFormControlInput1" th:field="*{title}">
+				</div>
+				<div class="mb-3">
+				  <label for="articleFormControlTextarea1" class="form-label">
+				  	내용
+			  	</label>
+				  <textarea class="form-control" name="content" 
+				  id="articleFormControlTextarea1" rows="3" th:field="*{content}"></textarea>
+				</div>
+				<div class="mb-3 float-right text-end">
+					<button type="submit" class="btn btn-primary">
+						수정
+					</button>
+				</div>
+			</form>	
+		</div>
+		<script>
+			const form = document.getElementById('articleUpdateForm');
+			form.addEventListener('submit',(e)=>{
+				e.preventDefault();
+				let vali_check = false;
+				let vali_text='';
+				if(form.title.value == ''){
+					vali_text += '제목을 입력하세요.';
+					form.title.focus();
+				} else if(form.content.value == ''){
+					vali_text += '내용을 입력하세요.';
+					form.content.focus();
+				} else{
+					vali_check = true;
+				}
+				
+				if(vali_check == false){
+					alert(vali_text);
+				} else{
+					const articleId = form.id.value;
+					const payload = new FormData(form);
+					fetch('/article/'+articleId+'/update',{
+						method : 'post',
+						body : payload
+					})
+					.then(response => response.json())
+					.then(data => {
+						alert(data.res_msg);
+					})
+				}
+			})
+		</script>
+    </th:block>
+</html>

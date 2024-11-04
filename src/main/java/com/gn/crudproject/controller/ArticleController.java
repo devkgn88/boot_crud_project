@@ -102,5 +102,29 @@ public class ArticleController {
 		return "article/detail";
 	}
 	
+	// 게시글 수정 화면
+	@GetMapping("/article/{id}/update")
+	public String updateArticleView(@PathVariable("id") Long id,
+			Model model) {
+		Article articleEntity = articleRepository.findById(id).orElse(null);
+		model.addAttribute("article",articleEntity);
+		return "article/update";
+	}
+	
+	@PostMapping("/article/{id}/update")
+	@ResponseBody
+	public Map<String,String> updateArticleApi(
+			ArticleDto dto
+			){
+		Map<String,String> resultMap = new HashMap<String,String>();
+		resultMap.put("res_code", "404");
+		resultMap.put("res_msg", "게시글 수정중 오류가 발생했습니다.");
+
+		Article article = dto.toEntity();
+		logger.info(article.toString());
+		
+		return resultMap;
+	}
+	
 	
 }

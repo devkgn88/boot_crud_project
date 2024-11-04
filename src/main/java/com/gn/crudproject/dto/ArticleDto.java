@@ -14,10 +14,11 @@ import lombok.ToString;
 @Getter
 @Setter
 public class ArticleDto {
+	private Long id;
 	private String title;	// 제목
 	private String content;	// 내용
 	
 	public Article toEntity() {
-		return new Article(null,title,content,null,null);
+		return new Article(id,title,content,null,null);
 	}
 }
