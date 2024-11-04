@@ -21,8 +21,8 @@
 				  		</tr>
 				  	</th:block>
 				  	<th:block th:else="${#lists.isEmpty(articleList)}">
-					    <tr th:each="article, articleStat : ${articleList}">
-					      <td th:text="${articleStat.count}" scope="row">1</td>
+					    <tr th:each="article, articleStatus : ${articleList}">
+					      <td th:text="${(paging.pageSize * paging.nowPage)+ articleStatus.count}" scope="row">1</td>
 					      <td th:text="${article.title}">테스트 제목</td>
 					      <td th:text="${article.content}">테스트 내용</td>
 					      <td th:text="${#temporals.format(article.createdTime, 'yy-MM-dd')}">2024.12.25</td>
@@ -31,6 +31,29 @@
 				  	</th:block>
 				  </tbody>
 				</table>
+				<nav aria-label="Page navigation">
+				  <ul class="pagination justify-content-center">
+				    <li class="page-item" th:classappend="${!paging.prev} ? 'disabled'">
+				      <a class="page-link" th:href="@{/article(nowPage=${paging.pageBarStart-1})}" 
+				      aria-label="Previous">
+				        <span aria-hidden="true">&laquo;</span>
+				      </a>
+				    </li>
+				    <th:block th:each="num : ${#numbers.sequence(paging.pageBarStart,paging.pageBarEnd)}">
+				    	<li class="page-item" th:classappend="${paging.nowPage == num} ? 'active'">
+				    		<a class="page-link" th:href="@{/article(nowPage=${num})}"
+				    		th:text="${num + 1}">
+				    		</a>
+				    	</li>
+				    </th:block>
+   				    <li class="page-item" th:classappend="${!paging.next} ? 'disabled'">
+				      <a class="page-link" th:href="@{/article(nowPage=${paging.pageBarEnd+1})}" 
+				      aria-label="next">
+				        <span aria-hidden="true">&raquo;</span>
+				      </a>
+				    </li>
+				  </ul>
+				</nav>
 			    <button type="button" class="btn btn-primary" 
 			    	th:onclick="|location.href='@{/article/create}'|">
 			    	등록

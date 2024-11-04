@@ -1,19 +1,24 @@
 package com.gn.crudproject.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.gn.crudproject.dto.ArticleDto;
+import com.gn.crudproject.dto.PageBarDto;
 import com.gn.crudproject.entity.Article;
 import com.gn.crudproject.repository.ArticleRepository;
 
@@ -62,11 +67,25 @@ public class ArticleController {
 	
 	// 게시글 목록 조회
 	@GetMapping("/article")
-	public String selectArticleAll(Model model) {
+	public String selectArticleAll(Model model
+	//,@PageableDefault(page=0,size=5,sort="createdTime", direction=Sort.Direction.DESC) Pageable pageable
+	,@RequestParam(name="nowPage", defaultValue="0") int nowPage
+			) {
+		
 		// 1. 모든 데이터 가져오기
-		List<Article> articleEntityList = articleRepository.findAll();
+		Pageable pageable = PageRequest.of(nowPage, 5, Sort.by("createdTime").descending());
+		Page<Article> pageArticle = articleRepository.findAll(pageable);
+		
+		
+		PageBarDto pageBarDto 
+			= new PageBarDto(pageArticle.getTotalPages()
+					,pageArticle.getNumber(),
+					pageArticle.getSize());
+		
 		// 2. 모델에 데이터 등록하기
-		model.addAttribute("articleList",articleEntityList);
+		model.addAttribute("articleList",pageArticle);
+		model.addAttribute("paging",pageBarDto);
+		
 		// 3. 뷰 페이지 설정하기
 		return "article/list";
 	}
