@@ -22,14 +22,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.gn.crudproject.dto.ArticleDto;
 import com.gn.crudproject.dto.PageBarDto;
 import com.gn.crudproject.entity.Article;
-import com.gn.crudproject.repository.ArticleRepository;
+import com.gn.crudproject.service.ArticleService;
 
 @Controller
 public class ArticleController {
 	
-	@Autowired
-	private ArticleRepository articleRepository;
+//	@Autowired
+//	private ArticleRepository articleRepository;
 
+	@Autowired
+	private ArticleService articleService;
+	
 	private Logger logger 
 	= LoggerFactory.getLogger(ArticleController.class);
 	
@@ -38,6 +41,7 @@ public class ArticleController {
 	public String createArticleView() {
 		return "article/create";
 	}
+	
 	
 	// 게시글 생성 기능
 	@PostMapping("/article/create")
@@ -49,17 +53,9 @@ public class ArticleController {
 		resultMap.put("res_code", "404");
 		resultMap.put("res_msg", "게시글 등록중 오류가 발생했습니다.");
 		
-		// 1. DTO를 엔티티로 변환
-		Article article = dto.toEntity();
-		// DTO가 엔티티로 잘 변환되었는지 확인
-		logger.info(article.toString());
+		Article created = articleService.create(dto);
 		
-		// 2. 레퍼지토리로 엔티티를 DB에 저장
-		Article saved = articleRepository.save(article);
-		// article에 DB에 잘 저장되는지 확인
-		logger.info(article.toString());
-		
-		if(saved.getId() != null) {
+		if(created != null) {
 			resultMap.put("res_code", "200");
 			resultMap.put("res_msg", "게시글이 등록되었습니다.");			
 		}
@@ -70,14 +66,13 @@ public class ArticleController {
 	// 게시글 목록 조회
 	@GetMapping("/article")
 	public String selectArticleAll(Model model
-	//,@PageableDefault(page=0,size=5,sort="createdTime", direction=Sort.Direction.DESC) Pageable pageable
 	,@RequestParam(name="nowPage", defaultValue="0") int nowPage
 			) {
 		
 		// 1. 모든 데이터 가져오기
 		Pageable pageable = PageRequest.of(nowPage, 5, Sort.by("createdTime").descending());
-		Page<Article> pageArticle = articleRepository.findAll(pageable);
 		
+		Page<Article> pageArticle = articleService.list(pageable);
 		
 		PageBarDto pageBarDto 
 			= new PageBarDto(pageArticle.getTotalPages()
@@ -96,8 +91,7 @@ public class ArticleController {
 	@GetMapping("/article/{id}")
 	public String selectArticleOne(@PathVariable("id") Long id,
 			Model model) {
-		// logger.info("게시글 단일 조회 : "+id);
-		Article articleEntity = articleRepository.findById(id).orElse(null);
+		Article articleEntity = articleService.detail(id);
 		model.addAttribute("article",articleEntity);
 		return "article/detail";
 	}
@@ -106,7 +100,7 @@ public class ArticleController {
 	@GetMapping("/article/{id}/update")
 	public String updateArticleView(@PathVariable("id") Long id,
 			Model model) {
-		Article articleEntity = articleRepository.findById(id).orElse(null);
+		Article articleEntity = articleService.detail(id);
 		model.addAttribute("article",articleEntity);
 		return "article/update";
 	}
@@ -122,15 +116,11 @@ public class ArticleController {
 		resultMap.put("res_code", "404");
 		resultMap.put("res_msg", "게시글 수정중 오류가 발생했습니다.");
 
-		// DTO를 엔티티로 변환하기
-		Article articleEntity = dto.toEntity();
-		
 		// 타깃 조회하기
-		Article target = articleRepository.findById(articleEntity.getId()).orElse(null);
+		Article updated = articleService.update(dto);
 		
 		// 업데이트 및 정상 응답하기
-		if(target != null) {
-			articleRepository.save(articleEntity);
+		if(updated != null) {
 			resultMap.put("res_code", "200");
 			resultMap.put("res_msg", "게시글이 정상적으로 수정되었습니다.");
 		}
@@ -147,11 +137,9 @@ public class ArticleController {
 		resultMap.put("res_code", "404");
 		resultMap.put("res_msg", "게시글 삭제중 오류가 발생했습니다.");
 		
-		// 1. 삭제할 대상 조회하기
-		Article target = articleRepository.findById(id).orElse(null);
+		Article deleted = articleService.delete(id);
 		// 2. 대상 엔티티 삭제하기
-		if(target != null) {
-			articleRepository.delete(target);
+		if(deleted != null) {
 			// 3. 삭제 완료 메시지 남기기
 			resultMap.put("res_code", "200");
 			resultMap.put("res_msg", "게시글이 정상적으로 삭제되었습니다.");
