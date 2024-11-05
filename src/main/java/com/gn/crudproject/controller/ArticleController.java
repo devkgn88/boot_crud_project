@@ -111,19 +111,24 @@ public class ArticleController {
 		return "article/update";
 	}
 	
+	// 게시글 수정 기능
 	@PostMapping("/article/{id}/update")
 	@ResponseBody
 	public Map<String,String> updateArticleApi(
 			ArticleDto dto
 			){
+		// 기본 응답 셋팅하기
 		Map<String,String> resultMap = new HashMap<String,String>();
 		resultMap.put("res_code", "404");
 		resultMap.put("res_msg", "게시글 수정중 오류가 발생했습니다.");
 
+		// DTO를 엔티티로 변환하기
 		Article articleEntity = dto.toEntity();
 		
+		// 타깃 조회하기
 		Article target = articleRepository.findById(articleEntity.getId()).orElse(null);
 		
+		// 업데이트 및 정상 응답하기
 		if(target != null) {
 			articleRepository.save(articleEntity);
 			resultMap.put("res_code", "200");
