@@ -2,7 +2,6 @@ package com.gn.crudproject.controller;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -120,8 +120,37 @@ public class ArticleController {
 		resultMap.put("res_code", "404");
 		resultMap.put("res_msg", "게시글 수정중 오류가 발생했습니다.");
 
-		Article article = dto.toEntity();
-		logger.info(article.toString());
+		Article articleEntity = dto.toEntity();
+		
+		Article target = articleRepository.findById(articleEntity.getId()).orElse(null);
+		
+		if(target != null) {
+			articleRepository.save(articleEntity);
+			resultMap.put("res_code", "200");
+			resultMap.put("res_msg", "게시글이 정상적으로 수정되었습니다.");
+		}
+		return resultMap;
+	}
+	
+	@DeleteMapping("/article/{id}")
+	@ResponseBody
+	public Map<String,String> deleteArticleApi(
+			@PathVariable("id") Long id){
+		// logger.info("삭제 요청이 들어왔습니다.");
+		
+		Map<String,String> resultMap = new HashMap<String,String>();
+		resultMap.put("res_code", "404");
+		resultMap.put("res_msg", "게시글 삭제중 오류가 발생했습니다.");
+		
+		// 1. 삭제할 대상 조회하기
+		Article target = articleRepository.findById(id).orElse(null);
+		// 2. 대상 엔티티 삭제하기
+		if(target != null) {
+			articleRepository.delete(target);
+			// 3. 삭제 완료 메시지 남기기
+			resultMap.put("res_code", "200");
+			resultMap.put("res_msg", "게시글이 정상적으로 삭제되었습니다.");
+		}
 		
 		return resultMap;
 	}

@@ -4,6 +4,9 @@
      layout:decorate="~{include/layout}">
 	<th:block layout:fragment="content">
 		<div class="container-fluid">
+			<div class="pt-3 pb-2 mb-3 border-bottom">
+				<h3 class="h4">게시글 상세</h3>
+			</div>
 			<form id="articleDetailForm" th:object="${article}">
 			    <div class="mb-3">
 				  <label for="articleFormControlInput1" class="form-label">
@@ -24,11 +27,28 @@
 					th:onclick="|location.href='@{/article/{id}/update(id=${article.id})}'|">
 						수정
 					</button>
+					<button type="button" class="btn btn-danger"
+					th:onclick="articleDelete([[${article.id}]]);">
+						삭제
+					</button>
 				</div>
 			</form>	
 		</div>
 		<script>
-
+			const articleDelete = function(articleId){
+				if(confirm("게시글을 삭제하시겠습니까?")){
+					fetch('/article/'+articleId,{
+						method : 'delete'
+					})
+					.then(response => response.json())
+					.then(data => {
+						alert(data.res_msg);
+						if(data.res_code == '200'){
+							location.href="/article";
+						}
+					})
+				}
+			}	
 		</script>
     </th:block>
 </html>
