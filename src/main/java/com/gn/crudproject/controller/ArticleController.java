@@ -1,6 +1,7 @@
 package com.gn.crudproject.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.gn.crudproject.dto.ArticleDto;
 import com.gn.crudproject.dto.PageBarDto;
@@ -53,12 +55,16 @@ public class ArticleController {
 		resultMap.put("res_code", "404");
 		resultMap.put("res_msg", "게시글 등록중 오류가 발생했습니다.");
 		
+//		for(MultipartFile mf : dto.getFiles()) {
+//			System.out.println(mf.getOriginalFilename());
+//		}
+		
 		Article created = articleService.create(dto);
 		
-		if(created != null) {
-			resultMap.put("res_code", "200");
-			resultMap.put("res_msg", "게시글이 등록되었습니다.");			
-		}
+//		if(created != null) {
+//			resultMap.put("res_code", "200");
+//			resultMap.put("res_msg", "게시글이 등록되었습니다.");			
+//		}
 		
 		return resultMap;
 	}

@@ -1,10 +1,7 @@
 package com.gn.crudproject.dto;
 
-import java.util.List;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import com.gn.crudproject.entity.Article;
+import com.gn.crudproject.entity.UploadFile;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,13 +14,16 @@ import lombok.ToString;
 @ToString
 @Getter
 @Setter
-public class ArticleDto {
+public class UploadFileDto {
+
 	private Long id;
-	private String title;	// 제목
-	private String content;	// 내용
-	private List<MultipartFile> files;
+	private String ori_name;
+	private String new_name;
+	private String file_dir;
 	
-	public Article toEntity() {
-		return new Article(id,title,content,null,null);
-	} 
+	public UploadFile toEntity() {
+		return new UploadFile(id,ori_name,new_name,file_dir);
+
+	}
+	
 }
