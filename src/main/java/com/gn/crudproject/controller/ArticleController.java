@@ -123,9 +123,6 @@ public class ArticleController {
 	public Map<String,String> updateArticleApi(
 			ArticleDto dto
 			){
-		System.out.println(dto.getDelete_files());
-		// 파일 삭제하기
-		
 		
 		// 기본 응답 셋팅하기
 		Map<String,String> resultMap = new HashMap<String,String>();

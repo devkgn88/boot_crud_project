@@ -29,6 +29,7 @@ public class ArticleService {
 	@Autowired
 	private UploadFileRepository fileRepository;
 	
+	@Transactional
 	public Article create(ArticleDto articleDto) {
 		
 		Article createdArticle = new Article();
@@ -107,11 +108,26 @@ public class ArticleService {
 	// 게시글 수정
 	@Transactional
 	public Article update(ArticleDto dto) {
+		
 		Article articleEntity = dto.toEntity();
 		Article target = articleRepository.findById(articleEntity.getId()).orElse(null);
 		if(target == null || dto.getId() != target.getId()) {
 			return null;
 		} else {
+			if(dto.getDelete_files() != null && !dto.getDelete_files().isEmpty()) {
+				
+				for(Long file_id : dto.getDelete_files()) {
+					// 1. 데이터페이스에서 파일 데이터 삭제
+					UploadFile deleteFile = fileRepository.findById(file_id).orElse(null);
+					
+					if(deleteFile != null) {
+						fileRepository.delete(deleteFile);
+					}
+					// 2. 메모리에서 파일 자체 삭제
+					fileService.delete(file_id);
+					
+				}
+			}
 			return articleRepository.save(articleEntity);
 		}
 	}

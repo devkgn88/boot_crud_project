@@ -27,6 +27,10 @@ public class UploadFileService {
 		return fileRepository.findAllByArticleId(article_id);
 	}
 	
+	public void delete(Long file_id) {
+		
+	}
+	
 	public UploadFileDto uploadFile(MultipartFile file) {
 		UploadFileDto dto = new UploadFileDto();
 		try {
