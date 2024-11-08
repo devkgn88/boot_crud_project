@@ -24,7 +24,6 @@ public class UploadFileService {
 			}
 			// 2. 파일 최대 용량 체크
 			long fileSize = file.getSize();
-			System.out.println(fileSize);
 			if( fileSize <= 0 || 5242880 < fileSize) {
 				throw new Exception("파일 크기 : "+fileSize+"(파일 사이즈가 5MB를 넘습니다.)");
 			}
@@ -41,7 +40,7 @@ public class UploadFileService {
 			// 7. 새로운 파일명
 			String newName = uniqueName+fileExt;
 			dto.setNew_name(newName);
-			// 8. 파일 저장 경로 설정
+			// 8. 파일 저장 경로 설정(article외에 다른 파일 전달할 경우 다른 경로 쓸 수있음)
 			// 9. 파일 껌데기 생성
 			String downDir = fileDir+"article/"+newName;
 			dto.setFile_dir(downDir);

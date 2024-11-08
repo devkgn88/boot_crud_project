@@ -55,16 +55,12 @@ public class ArticleController {
 		resultMap.put("res_code", "404");
 		resultMap.put("res_msg", "게시글 등록중 오류가 발생했습니다.");
 		
-//		for(MultipartFile mf : dto.getFiles()) {
-//			System.out.println(mf.getOriginalFilename());
-//		}
-		
 		Article created = articleService.create(dto);
 		
-//		if(created != null) {
-//			resultMap.put("res_code", "200");
-//			resultMap.put("res_msg", "게시글이 등록되었습니다.");			
-//		}
+		if(created.getId() != null) {
+			resultMap.put("res_code", "200");
+			resultMap.put("res_msg", "게시글이 등록되었습니다.");			
+		}
 		
 		return resultMap;
 	}

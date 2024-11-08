@@ -29,64 +29,69 @@ public class ArticleService {
 	@Autowired
 	private UploadFileRepository uploadFileRepository;
 	
-	// 게시글 등록
 	public Article create(ArticleDto articleDto) {
-		// 게시글 정보를 등록하고 파일에 관련 게시글 관련 컬럼을 만들기!!! 어때!!
 		
-		// 1. 파일 정보 등록
-		int fileLeng = articleDto.getFiles().size();
+		Article createdArticle = new Article();
 		
-		List<UploadFileDto> fileDtoList = new ArrayList<UploadFileDto>();
-		
-		for(MultipartFile file : articleDto.getFiles()) {
-			UploadFileDto fileDto = fileService.uploadFile(file);
-			if(fileDto != null) fileDtoList.add(fileDto);
-		}
-		
-		// 2. 컴퓨터에 파일이 정상적으로 저장됐다면 
-		// 메타 데이터 데이터베이스에 저장
-		if(fileDtoList.size() == fileLeng) {
-			
-			List<UploadFile> fileList = new ArrayList<UploadFile>();
-			
-			for(UploadFileDto fileDto : fileDtoList) {
-				UploadFile uploadFile = fileDto.toEntity();
-				UploadFile created = new UploadFile();
-				if(uploadFile.getId() != null) {
-					created = null;
-				}else {
-					created = uploadFileRepository.save(uploadFile);
-					fileList.add(created);
-				}
-			}
-			
-			// 3. 데이터베이스에 파일이 잘 등록되었다면, 게시글 등록
-			if(fileList.size() == fileDtoList.size()) {
-				Article article = articleDto.toEntity();
-				Article created = new Article();
-				if(article.getId() != null) {
-					created = null;
+		try {
+			Article article = articleDto.toEntity();
+			if(article.getId() != null) {
+				throw new Exception("이미 존재하는 게시글입니다.");
+			} if(article.getId() == null) {
+				createdArticle = articleRepository.save(article);
+				// 1. 게시글 정보 등록 완료
+				if(createdArticle != null) {
+					
+					// 2. 파일 메모리에 저장
+					int fileLeng = articleDto.getFiles().size();
+					
+					List<UploadFileDto> fileDtoList = new ArrayList<UploadFileDto>();
+					
+					for(MultipartFile file : articleDto.getFiles()) {
+						UploadFileDto fileDto = fileService.uploadFile(file);
+						if(fileDto != null) fileDtoList.add(fileDto);
+					}
+					
+					// 3. 파일 메타 데이터 저장
+					if(fileDtoList.size() == fileLeng) {
+						
+						// 비어 있는 entity 리스트 생성
+						List<UploadFile> fileList = new ArrayList<UploadFile>();
+						
+						// 파일 정보 저장 정보를 추가한 dto 리스트 반복문 돌리기
+						for(UploadFileDto fileDto : fileDtoList) {
+							// UploadFile uploadFile = fileDto.toEntity();
+							UploadFile uploadFile = new UploadFile(fileDto.getId(),fileDto.getOri_name()
+									,fileDto.getNew_name(), fileDto.getFile_dir(), createdArticle);
+							
+							UploadFile createdFile = new UploadFile();
+							if(uploadFile.getId() != null) {
+								createdFile= null;
+								
+							}else {
+								createdFile = uploadFileRepository.save(uploadFile);
+								fileList.add(createdFile);
+							}
+						}
+						
+						// 3. 데이터베이스에 파일이 잘 등록되었다면 
+						if(fileList.size() != fileDtoList.size()) {
+							throw new Exception("파일 메타 데이터 저장 중 오류가 발생하였습니다.");
+						}
+						
+					} else {
+						throw new Exception("파일 저장 중 오류가 발생하였습니다.");
+					}
 				} else {
-					created = articleRepository.save(article);
-				}
-				
-				// 4. 게시글 정보도 잘 등록되었다면 매핑 테이블에 정보 등록
-				if(created != null) {
-					
-					
+					throw new Exception("게시글 등록중 오류가 발생하였습니다.");
 				}
 			}
-			
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
 		}
-		
-		// 2. 게시글 등록
-		// 3. 파일과 게시글 정보 연결
-		return new Article();
-//		Article article = dto.toEntity();
-//		if(article.getId() != null) {
-//			return null;
-//		}
-//		return articleRepository.save(article);
+	
+		return createdArticle;
 	}
 	
 	// 게시글 목록 조회

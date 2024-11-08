@@ -20,9 +20,10 @@ public class UploadFileDto {
 	private String ori_name;
 	private String new_name;
 	private String file_dir;
+
 	
 	public UploadFile toEntity() {
-		return new UploadFile(id,ori_name,new_name,file_dir);
+		return new UploadFile(id,ori_name,new_name,file_dir,null);
 
 	}
 	

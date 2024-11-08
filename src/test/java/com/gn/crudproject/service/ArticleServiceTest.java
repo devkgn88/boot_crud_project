@@ -20,7 +20,7 @@ class ArticleServiceTest {
 	void detail_성공() {
 		// 1. 예상 데이터
 		Long id = 1L;
-		Article expected = new Article(id,"11111","aaaaa",LocalDateTime.of(2024, 11,4,10,53,6),null);
+		Article expected = new Article(id,"11111","aaaaa",LocalDateTime.of(2024, 11,4,10,53,6),null,null);
 		// 2. 실제 데이터
 		Article article = articleService.detail(id);
 		// 3. 비교 및 검증
