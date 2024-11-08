@@ -98,8 +98,8 @@ public class ArticleController {
 	public String selectArticleOne(@PathVariable("id") Long id,
 			Model model) {
 		Article articleEntity = articleService.detail(id);
-		List<UploadFile> fileList = fileService.list(id);
 		model.addAttribute("article",articleEntity);
+		List<UploadFile> fileList = fileService.list(id);
 		model.addAttribute("fileList",fileList);
 		return "article/detail";
 	}
@@ -110,6 +110,10 @@ public class ArticleController {
 			Model model) {
 		Article articleEntity = articleService.detail(id);
 		model.addAttribute("article",articleEntity);
+		
+		List<UploadFile> fileList = fileService.list(id);
+		model.addAttribute("fileList",fileList);
+		
 		return "article/update";
 	}
 	
@@ -119,6 +123,10 @@ public class ArticleController {
 	public Map<String,String> updateArticleApi(
 			ArticleDto dto
 			){
+		System.out.println(dto.getDelete_files());
+		// 파일 삭제하기
+		
+		
 		// 기본 응답 셋팅하기
 		Map<String,String> resultMap = new HashMap<String,String>();
 		resultMap.put("res_code", "404");

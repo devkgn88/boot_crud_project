@@ -22,6 +22,7 @@ public class ArticleDto {
 	private String title;	// 제목
 	private String content;	// 내용
 	private List<MultipartFile> files;
+	private List<String> delete_files;
 	
 	public Article toEntity() {
 		return new Article(id,title,content,null,null);

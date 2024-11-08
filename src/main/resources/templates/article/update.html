@@ -20,6 +20,26 @@
 				  <textarea class="form-control" name="content" 
 				  id="articleFormControlTextarea1" rows="3" th:field="*{content}"></textarea>
 				</div>
+				<div class="mb-2" th:if="${!#lists.isEmpty(fileList)}">
+					<label class="form-label">파일</label>
+					<div class="row g-3" th:each="uploadFile : ${fileList}">
+					  <input type="hidden" name="delete_files" th:value="${uploadFile.id}" disabled>
+					  <div class="col-auto">
+					    <label class="visually-hidden">FileName</label>
+					    <span class="form-control" th:text="${uploadFile.oriName}"></span>
+					  </div>
+					  <div class="col-auto">
+					    <button type="button" class="btn btn-danger mb-3 fileDeleteBtn"
+					    	onclick="deleteDesign(this);">
+					    	삭제
+				    	</button>
+					  </div>
+					</div>
+				</div>
+				<div class="mb-3">
+				  <input type="file" name="files" class="form-control" id="inputGroupFile"
+				  multiple>
+				</div>
 				<div class="mb-3 float-right text-end">
 					<button type="submit" class="btn btn-primary">
 						수정
@@ -28,6 +48,30 @@
 			</form>	
 		</div>
 		<script>
+			const deleteDesign = function(element){
+				
+				const bumo = element.parentElement;
+ 				const jobumo = bumo.parentElement;
+				const chutjae = jobumo.firstElementChild;	// input
+				const duljae = chutjae.nextElementSibling;	// col-auto
+				const maknae = duljae.lastElementChild; 	// span
+				
+				if(element.classList.contains('btn-danger')){
+					element.classList.add('btn-primary');
+					element.classList.remove('btn-danger');
+					element.innerText = '유지';
+					maknae.style.textDecoration = 'line-through';
+					chutjae.disabled = false;
+					
+				} else{
+					element.classList.add('btn-danger');
+					element.classList.remove('btn-primary');
+					element.innerText = '삭제';
+					maknae.style.textDecoration = 'none';
+					chutjae.disabled = true;
+				}
+			}
+		
 			const form = document.getElementById('articleUpdateForm');
 			form.addEventListener('submit',(e)=>{
 				e.preventDefault();
@@ -48,6 +92,7 @@
 				} else{
 					const articleId = form.id.value;
 					const payload = new FormData(form);
+										
 					fetch('/article/'+articleId+'/update',{
 						method : 'post',
 						body : payload
