@@ -22,6 +22,7 @@ public class UploadFileService {
 	@Value("${ffupload.location}")
 	private String fileDir;
 	
+	
 	public List<UploadFile> list(Long article_id){
 		return fileRepository.findAllByArticleId(article_id);
 	}
