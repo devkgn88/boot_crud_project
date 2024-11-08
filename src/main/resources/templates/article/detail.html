@@ -22,6 +22,21 @@
 				  <textarea class="form-control" name="content" disabled
 				  id="articleFormControlTextarea1" rows="3" th:field="*{content}"></textarea>
 				</div>
+				<div class="mb-2" th:if="${!#lists.isEmpty(fileList)}">
+					<label class="form-label">파일</label>
+					<div class="row g-3" th:each="uploadFile : ${fileList}">
+					  <div class="col-auto">
+					    <label class="visually-hidden">FileName</label>
+					    <span class="form-control" th:text="${uploadFile.oriName}"></span>
+					  </div>
+					  <div class="col-auto">
+					    <button type="button" class="btn btn-primary mb-3"
+					    th:onclick="|location.href='@{/download/{no}(no=${uploadFile.id})}'|">
+					    	다운로드
+				    	</button>
+					  </div>
+					</div>
+				</div>
 				<div class="mb-3 float-right text-end">
 					<button type="button" class="btn btn-primary"
 					th:onclick="|location.href='@{/article/{id}/update(id=${article.id})}'|">

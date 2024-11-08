@@ -45,7 +45,5 @@ public class Article {
 	@Column(insertable = false)
 	private LocalDateTime updatedTime;
 	
-	@OneToMany(mappedBy = "article")
-	private List<UploadFile> files;
 	
 }

@@ -1,19 +1,30 @@
 package com.gn.crudproject.service;
 
 import java.io.File;
+import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gn.crudproject.dto.UploadFileDto;
+import com.gn.crudproject.entity.UploadFile;
+import com.gn.crudproject.repository.UploadFileRepository;
 
 @Service
 public class UploadFileService {
 	
+	@Autowired
+	private UploadFileRepository fileRepository;
+	
 	@Value("${ffupload.location}")
 	private String fileDir;
+	
+	public List<UploadFile> list(Long article_id){
+		return fileRepository.findAllByArticleId(article_id);
+	}
 	
 	public UploadFileDto uploadFile(MultipartFile file) {
 		UploadFileDto dto = new UploadFileDto();

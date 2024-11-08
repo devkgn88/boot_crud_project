@@ -27,7 +27,7 @@ public class ArticleService {
 	private ArticleRepository articleRepository;
 	
 	@Autowired
-	private UploadFileRepository uploadFileRepository;
+	private UploadFileRepository fileRepository;
 	
 	public Article create(ArticleDto articleDto) {
 		
@@ -69,7 +69,7 @@ public class ArticleService {
 								createdFile= null;
 								
 							}else {
-								createdFile = uploadFileRepository.save(uploadFile);
+								createdFile = fileRepository.save(uploadFile);
 								fileList.add(createdFile);
 							}
 						}

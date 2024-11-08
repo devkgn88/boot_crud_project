@@ -24,6 +24,6 @@ public class ArticleDto {
 	private List<MultipartFile> files;
 	
 	public Article toEntity() {
-		return new Article(id,title,content,null,null,null);
+		return new Article(id,title,content,null,null);
 	} 
 }

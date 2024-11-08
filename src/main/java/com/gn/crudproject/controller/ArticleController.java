@@ -19,12 +19,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.gn.crudproject.dto.ArticleDto;
 import com.gn.crudproject.dto.PageBarDto;
 import com.gn.crudproject.entity.Article;
+import com.gn.crudproject.entity.UploadFile;
 import com.gn.crudproject.service.ArticleService;
+import com.gn.crudproject.service.UploadFileService;
 
 @Controller
 public class ArticleController {
@@ -34,6 +35,9 @@ public class ArticleController {
 
 	@Autowired
 	private ArticleService articleService;
+	
+	@Autowired
+	private UploadFileService fileService;
 	
 	private Logger logger 
 	= LoggerFactory.getLogger(ArticleController.class);
@@ -94,7 +98,9 @@ public class ArticleController {
 	public String selectArticleOne(@PathVariable("id") Long id,
 			Model model) {
 		Article articleEntity = articleService.detail(id);
+		List<UploadFile> fileList = fileService.list(id);
 		model.addAttribute("article",articleEntity);
+		model.addAttribute("fileList",fileList);
 		return "article/detail";
 	}
 	
