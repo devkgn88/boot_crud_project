@@ -28,6 +28,21 @@ public class UploadFileService {
 	}
 	
 	public void delete(Long file_id) {
+		try {
+			UploadFile uf = fileRepository.findById(file_id).orElse(null);
+			if(uf != null) {
+				// 파일 경로로 File 객체 생성
+				File file = new File(uf.getFileDir());
+				
+				
+				// 파일이 존재하면 삭제
+				if(file.exists()) {
+					file.delete();
+				}
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
