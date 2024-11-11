@@ -15,7 +15,8 @@
 					    <li><a class="dropdown-item" href="#">내용</a></li>
 					    <li><a class="dropdown-item" href="#">제목+내용</a></li>
 					  </ul> -->
-					  <input type="text" class="form-control" id="articleSearchText" placeholder="검색어를 입력하세요." aria-label="Text input with dropdown button">
+					  <input type="text" class="form-control" id="articleSearchText" placeholder="검색어를 입력하세요." 
+					  aria-label="Text input with dropdown button" th:value="${searchText}">
 					  <button class="btn btn-outline-primary" type="button" id="articleSearchBtn">검색</button>
 					</div>
 				</div>
@@ -52,20 +53,20 @@
 				<nav aria-label="Page navigation">
 				  <ul class="pagination justify-content-center">
 				    <li class="page-item" th:classappend="${!paging.prev} ? 'disabled'">
-				      <a class="page-link" th:href="@{/article(nowPage=${paging.pageBarStart-1})}" 
+				      <a class="page-link" th:href="@{/article(nowPage=${paging.pageBarStart-1},search_text=${searchText})}" 
 				      aria-label="Previous">
 				        <span aria-hidden="true">&laquo;</span>
 				      </a>
 				    </li>
 				    <th:block th:each="num : ${#numbers.sequence(paging.pageBarStart,paging.pageBarEnd)}">
 				    	<li class="page-item" th:classappend="${paging.nowPage == num} ? 'active'">
-				    		<a class="page-link" th:href="@{/article(nowPage=${num})}"
+				    		<a class="page-link" th:href="@{/article(nowPage=${num},search_text=${searchText})}"
 				    		th:text="${num + 1}">
 				    		</a>
 				    	</li>
 				    </th:block>
    				    <li class="page-item" th:classappend="${!paging.next} ? 'disabled'">
-				      <a class="page-link" th:href="@{/article(nowPage=${paging.pageBarEnd+1})}" 
+				      <a class="page-link" th:href="@{/article(nowPage=${paging.pageBarEnd+1},search_text=${searchText})}" 
 				      aria-label="next">
 				        <span aria-hidden="true">&raquo;</span>
 				      </a>

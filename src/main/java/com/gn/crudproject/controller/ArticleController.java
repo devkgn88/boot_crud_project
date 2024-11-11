@@ -90,6 +90,7 @@ public class ArticleController {
 		// 2. 모델에 데이터 등록하기
 		model.addAttribute("articleList",pageArticle);
 		model.addAttribute("paging",pageBarDto);
+		model.addAttribute("searchText",searchText);
 		
 		// 3. 뷰 페이지 설정하기
 		return "article/list";
