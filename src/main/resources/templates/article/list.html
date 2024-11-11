@@ -8,15 +8,15 @@
 				<h3 class="h4">게시판</h3>
 				<div class="d-inline-flex pt-2">
 					<div class="input-group mb-3">
-					  <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">선택</button>
+<!-- 					  <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" 
+					  aria-expanded="false">선택</button>
 					  <ul class="dropdown-menu">
 					    <li><a class="dropdown-item" href="#">제목</a></li>
 					    <li><a class="dropdown-item" href="#">내용</a></li>
 					    <li><a class="dropdown-item" href="#">제목+내용</a></li>
-					  </ul>
-					  <input type="text" class="form-control" placeholder="검색어를 입력하세요." aria-label="Text input with dropdown button">
-					  <button class="btn btn-outline-primary" type="button" id="button-addon2">검색</button>
-					
+					  </ul> -->
+					  <input type="text" class="form-control" id="articleSearchText" placeholder="검색어를 입력하세요." aria-label="Text input with dropdown button">
+					  <button class="btn btn-outline-primary" type="button" id="articleSearchBtn">검색</button>
 					</div>
 				</div>
 			</div>
@@ -77,5 +77,27 @@
 			    	등록
 		    	</button>
 			</div>
+			<script>
+				const searchBtn = document.getElementById('articleSearchBtn');
+				searchBtn.addEventListener('click',(e)=>{
+					const searchTxt = document.getElementById('articleSearchText').value;
+					location.href="/article?search_text="+searchTxt;
+				});
+			</script>
+
+ 				<!--const dropItem = document.querySelectorAll('.dropdown-item');
+				dropItem.forEach((target) => target.addEventListener("click", function(){
+					const allChild = this.parentElement.parentElement.children;
+					for(let i = 0 ; i < allChild.length ; i++){
+						allChild[i].children[0].classList.remove('active')
+					}
+					this.classList.add('active');
+					this.parentElement.parentElement.previousElementSibling.innerHTML=this.innerText;
+				}));
+				
+				document.addEventListener("DOMContentLoaded",function(){
+					document.querySelectorAll('.dropdown-item')[0].click();
+				});-->
+		
     </th:block>
 </html>
