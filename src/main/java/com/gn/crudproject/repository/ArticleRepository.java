@@ -9,4 +9,7 @@ import com.gn.crudproject.entity.Article;
 public interface ArticleRepository extends JpaRepository<Article,Long>{
 
 	Page<Article> findAll(Pageable pageable);
+	
+	Page<Article> findByTitleContaining(String title, Pageable pageable);
+	
 }

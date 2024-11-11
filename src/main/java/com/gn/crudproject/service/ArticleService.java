@@ -95,8 +95,14 @@ public class ArticleService {
 	}
 	
 	// 게시글 목록 조회
-	public Page<Article> list(Pageable pageable){
-		return articleRepository.findAll(pageable);
+	public Page<Article> list(Pageable pageable, String searchText){
+		
+		if(searchText != null && searchText.trim().isEmpty() == false) {
+			return articleRepository.findByTitleContaining(searchText,pageable);
+		} else {
+			return articleRepository.findAll(pageable);
+		}
+		
 	}
 	
 	// 게시글 단일 조회

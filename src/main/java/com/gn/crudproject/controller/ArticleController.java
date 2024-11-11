@@ -73,12 +73,14 @@ public class ArticleController {
 	@GetMapping("/article")
 	public String selectArticleAll(Model model
 	,@RequestParam(name="nowPage", defaultValue="0") int nowPage
+	,@RequestParam(name="search_text", required = false) String searchText
 			) {
+		logger.info(searchText);
 		
 		// 1. 모든 데이터 가져오기
 		Pageable pageable = PageRequest.of(nowPage, 5, Sort.by("createdTime").descending());
 		
-		Page<Article> pageArticle = articleService.list(pageable);
+		Page<Article> pageArticle = articleService.list(pageable, searchText);
 		
 		PageBarDto pageBarDto 
 			= new PageBarDto(pageArticle.getTotalPages()
