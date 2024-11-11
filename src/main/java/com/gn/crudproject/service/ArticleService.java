@@ -98,7 +98,9 @@ public class ArticleService {
 	public Page<Article> list(Pageable pageable, String searchText){
 		
 		if(searchText != null && searchText.trim().isEmpty() == false) {
-			return articleRepository.findByTitleContaining(searchText,pageable);
+			return articleRepository.findByTitleOrContentContaining(searchText, pageable);
+			// return articleRepository.findByTitleContaining(searchText,pageable);
+			
 		} else {
 			return articleRepository.findAll(pageable);
 		}
