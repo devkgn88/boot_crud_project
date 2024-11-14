@@ -5,9 +5,9 @@
 	<th:block layout:fragment="content">
 		<div class="container-fluid">
 			<div class="pt-3 pb-2 mb-3 border-bottom">
-				<h3 class="h4">회원 가입</h3>
+				<h3 class="h4">로그인</h3>
 			</div>
-			<form id="memberCreateForm">
+			<form id="memberLoginForm">
 			    <div class="mb-3">
 				  <label for="memberFormControlInput1" class="form-label">
 				  	이메일
@@ -24,45 +24,14 @@
 				</div>
 				<div class="mb-3 float-right text-end">
 					<button type="submit" class="btn btn-primary">
+						로그인
+					</button>
+					<button type="button" class="btn btn-secondary"
+					th:onclick="|location.href='@{/signup}'|">
 						회원가입
 					</button>
 				</div>
 			</form>			
 		</div>
-		<script>
-			const form = document.getElementById('memberCreateForm');
-			form.addEventListener('submit',(e)=>{
-				e.preventDefault();
-				// 1. 유효성 검사
-				let vali_check = false;
-				let vali_text = '';
-				if(form.email.value == ''){
-					vali_text += '이메일을 입력하세요.';
-					form.email.focus();
-				} else if(form.password.value == ''){
-					vali_text += '비밀번호를 입력하세요.';
-					form.password.focus();
-				} else{
-					vali_check = true;
-				}
-				// 2. 회원 정보 등록
-				if(vali_check == false){
-					alert(vali_text);
-				} else {
-					const payload = new FormData(form);
-					fetch('/member',{
-						method : 'post',
-						body : payload
-					})
-					.then(response => response.json())
-					.then(data => {
-						alert(data.res_msg);
-						if(data.res_code == '200'){
-							location.href="/";
-						}
-					})
-				}
-			})
-		</script>
     </th:block>
 </html>

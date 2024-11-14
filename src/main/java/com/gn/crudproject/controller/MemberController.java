@@ -24,12 +24,17 @@ public class MemberController {
 	private Logger logger 
 	= LoggerFactory.getLogger(MemberController.class);
 	
-	@GetMapping("/member/create")
+	@GetMapping("/login")
+	public String loginView() {
+		return "member/login";
+	}
+	
+	@GetMapping("/signup")
 	public String createMemberView() {
 		return "member/create";
 	}
 	
-	@PostMapping("/member/create")
+	@PostMapping("/member")
 	@ResponseBody
 	public Map<String,String> createMemberApi(MemberDto dto){
 		Map<String,String> resultMap = new HashMap<String,String>();
@@ -49,7 +54,6 @@ public class MemberController {
 		}
 		
 		return resultMap;
-		
 	}
 	
 

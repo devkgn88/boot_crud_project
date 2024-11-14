@@ -31,7 +31,7 @@ public class WebSecurityConfig {
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 		http.authorizeHttpRequests(requests -> requests
-							.requestMatchers("/login","/signup","/user").permitAll()
+							.requestMatchers("/login","/signup","/member").permitAll()
 							.anyRequest().authenticated())
 			.formLogin(login -> login
 					.loginPage("/login")
@@ -47,6 +47,7 @@ public class WebSecurityConfig {
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+	
 	
 	// AuthenticationManager(인증 관리자) 관련 사항을 설정합니다. 
 	@Bean
