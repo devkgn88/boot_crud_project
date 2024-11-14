@@ -62,7 +62,7 @@
 						method : 'post',
 						headers: {
 			                'header': document.querySelector('meta[name="_csrf_header"]').content,
-			                "Content-Type": "multipart/form-data",
+			                "Content-Type": "application/json",
 			                'X-CSRF-Token': document.querySelector('meta[name="_csrf"]').content
 						},					
 						body : jsonData

@@ -7,12 +7,13 @@
 			<div class="pt-3 pb-2 mb-3 border-bottom">
 				<h3 class="h4">로그인</h3>
 			</div>
-			<form id="memberLoginForm">
+			<form id="memberLoginForm" action="/login" method="POST">
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 			    <div class="mb-3">
 				  <label for="memberFormControlInput1" class="form-label">
 				  	이메일
 				  </label>
-				  <input type="email" class="form-control" name="email"
+				  <input type="email" class="form-control" name="username"
 				  id="memberFormControlInput1" placeholder="hong_gd@abc.com">
 				</div>
 				<div class="mb-3">

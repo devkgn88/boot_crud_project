@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 // 스프링에서 읽는 환경설정 파일임을 의미해요.
 @Configuration
@@ -30,9 +31,13 @@ public class WebSecurityConfig {
 	// 특정 HTTP 요청이 들어왔을 때 보안 관련 사항을 설정합니다.
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+//		HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
+//		requestCache.setMatchingRequestParameterName(null);
+		
 		http.authorizeHttpRequests(requests -> requests
 							.requestMatchers("/login","/signup","/member").permitAll()
 							.anyRequest().authenticated())
+//			.requestCache(cache -> cache.requestCache(requestCache))
 			.formLogin(login -> login
 					.loginPage("/login")
 					.defaultSuccessUrl("/article"))
