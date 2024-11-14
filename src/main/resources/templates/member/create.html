@@ -8,6 +8,8 @@
 				<h3 class="h4">회원 가입</h3>
 			</div>
 			<form id="memberCreateForm">
+<!-- 				<input id="_csrf" name="_csrf" th:value="${_csrf.token}">
+				<input id="_csrf_header" name="_csrf_header" th:value="${_csrf.headerName}"> -->
 			    <div class="mb-3">
 				  <label for="memberFormControlInput1" class="form-label">
 				  	이메일
@@ -49,10 +51,21 @@
 				if(vali_check == false){
 					alert(vali_text);
 				} else {
+					let obj = {};
 					const payload = new FormData(form);
+					payload.forEach(function(value,key){
+						obj[key] = value;
+					});
+					const jsonData = JSON.stringify(obj);
+															
 					fetch('/member',{
 						method : 'post',
-						body : payload
+						headers: {
+			                'header': document.querySelector('meta[name="_csrf_header"]').content,
+			                "Content-Type": "multipart/form-data",
+			                'X-CSRF-Token': document.querySelector('meta[name="_csrf"]').content
+						},					
+						body : jsonData
 					})
 					.then(response => response.json())
 					.then(data => {
