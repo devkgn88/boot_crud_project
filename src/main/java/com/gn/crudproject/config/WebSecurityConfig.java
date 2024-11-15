@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 // 스프링에서 읽는 환경설정 파일임을 의미해요.
 @Configuration
@@ -40,7 +39,8 @@ public class WebSecurityConfig {
 //			.requestCache(cache -> cache.requestCache(requestCache))
 			.formLogin(login -> login
 					.loginPage("/login")
-					.defaultSuccessUrl("/article"))
+//					.defaultSuccessUrl("/article"))
+					.successHandler(new MyLoginSuccessHandler()))
 			.logout(logout -> logout
 					.logoutSuccessUrl("/login")
 					.invalidateHttpSession(true));

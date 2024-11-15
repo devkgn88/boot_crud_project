@@ -6,6 +6,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,9 @@ import com.gn.crudproject.dto.MemberDto;
 import com.gn.crudproject.entity.Member;
 import com.gn.crudproject.repository.MemberRepository;
 import com.gn.crudproject.service.MemberService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class MemberController {
@@ -56,6 +61,14 @@ public class MemberController {
 		
 		return resultMap;
 	}
+	
+	@GetMapping("/logout")
+	public String logout(HttpServletRequest request,HttpServletResponse response) {
+		new SecurityContextLogoutHandler().logout(request, response, 
+				SecurityContextHolder.getContext().getAuthentication());
+		return "redirect:/login";
+	}
+	
 	
 
 }
