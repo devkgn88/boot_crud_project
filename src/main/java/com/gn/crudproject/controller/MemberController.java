@@ -6,7 +6,12 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.gn.crudproject.config.JwtUtil;
+import com.gn.crudproject.dto.LoginRequestDto;
 import com.gn.crudproject.dto.MemberDto;
 import com.gn.crudproject.entity.Member;
 import com.gn.crudproject.repository.MemberRepository;
@@ -31,12 +38,36 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	
+	@Autowired
+	private PasswordEncoder encoder;
+	
+	@Autowired
+	private JwtUtil jwtUtil;
+	
 	private Logger logger 
 	= LoggerFactory.getLogger(MemberController.class);
 	
 	@GetMapping("/login")
 	public String loginView() {
 		return "member/login";
+	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<String> loginApi(@RequestBody LoginRequestDto dto){
+		String email = dto.getEmail();
+		String password = dto.getPassword();
+		Member member = memberRepository.findByEmail(email);
+		if(member == null) {
+			throw new UsernameNotFoundException("xx");
+		}
+		
+		if(!encoder.matches(password, member.getPassword())) {
+			throw new BadCredentialsException("비번틀림");
+		}
+		
+		//String token = jwtUtil.generateToken(member);
+		return ResponseEntity.status(HttpStatus.OK).body("");
+		
 	}
 	
 	@GetMapping("/signup")

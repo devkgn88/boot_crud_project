@@ -2,7 +2,6 @@ package com.gn.crudproject.config;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,12 +15,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtAuthFilter extends OncePerRequestFilter{
-
-	@Autowired
-	private MemberDetailService memberDetailService;
-
-	@Autowired
-	private JwtUtil jwtUtil;
+	
+	private final MemberDetailService memberDetailService;
+	private final JwtUtil jwtUtil;
+	
+	public JwtAuthFilter(MemberDetailService memberDetailService,
+			JwtUtil jwtUtil) {
+		this.memberDetailService = memberDetailService;
+		this.jwtUtil = jwtUtil;
+	}
 
 	// JWT 검증 필터를 수행할 메소드입니다.
 	@Override
@@ -65,8 +67,5 @@ public class JwtAuthFilter extends OncePerRequestFilter{
 		filterChain.doFilter(request, response);
 		
 	}
-	
-	
-	
 	
 }

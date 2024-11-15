@@ -25,19 +25,19 @@ public class JwtUtil {
 	// 클래스 내부에서 많이 사용되기 때문에 메소드 밖으로 뺐습니다.
 	// application.properties에서 가지고온 key값을 Key 객체로 변환해서 사용합니다.
 	private final Key key;
-	// 
 	private final long expTime;
+	
 
 	// JwtUtil 클래스의 매개변수 생성자를 활용하여 
 	// 2개의 필드 key와 expTime을 초기화합니다. 
 	public JwtUtil(
-		@Value("${jwt.secret}") final String secretKey,
-		@Value("${jwt.expiration_time}") final long expTime)
-	{
-		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-		this.key = Keys.hmacShaKeyFor(keyBytes);
-		this.expTime = expTime;
-	}
+			@Value("${jwt.secret}") final String secretKey,
+			@Value("${jwt.expiration_time}") final long expTime)
+		{
+			byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+			this.key = Keys.hmacShaKeyFor(keyBytes);
+			this.expTime = expTime;
+		}
 
 	// 아래 AccessToken을 생성하는 함수 createAccessToken을 활용하여
 	// 문자열 형태로 JWT를 리턴하는 메소드입니다.
@@ -80,6 +80,11 @@ public class JwtUtil {
 		}catch(Exception e) {
 			return false;
 		}
+	}
+	
+	public Long getUserId(String token) {
+		Claims claims = getClaims(token);
+		return claims.get("id",Long.class);
 	}
 	
 	// 토큰을 기반으로 유저 Email을 가져오는 메소드입니다. 

@@ -1,5 +1,6 @@
 package com.gn.crudproject.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,15 +9,25 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.gn.crudproject.service.MemberDetailService;
 
 // 스프링에서 읽는 환경설정 파일임을 의미해요.
 @Configuration
 // 스프링 시큐리티를 활성화하겠다는 어노테이션입니다.
 @EnableWebSecurity
 public class WebSecurityConfig {
+	
+	@Autowired
+	private MemberDetailService memberDetailService;
+	
+	@Autowired
+	private JwtUtil jwtUtil;
 
 	
 	// 정적 리소스에 스프링 시큐리티를 비활성화합니다. 
@@ -39,11 +50,16 @@ public class WebSecurityConfig {
 //			.requestCache(cache -> cache.requestCache(requestCache))
 			.formLogin(login -> login
 					.loginPage("/login")
-//					.defaultSuccessUrl("/article"))
+					.defaultSuccessUrl("/article")
 					.successHandler(new MyLoginSuccessHandler()))
+//			.formLogin(AbstractHttpConfigurer::disable)
+//			.httpBasic(AbstractHttpConfigurer::disable)
 			.logout(logout -> logout
 					.logoutSuccessUrl("/login")
-					.invalidateHttpSession(true));
+					.invalidateHttpSession(true))
+			.addFilterBefore(new JwtAuthFilter(memberDetailService,jwtUtil), 
+				UsernamePasswordAuthenticationFilter.class);
+		
 		return http.build();
 	}
 	
