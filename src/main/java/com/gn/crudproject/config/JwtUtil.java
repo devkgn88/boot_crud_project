@@ -82,12 +82,12 @@ public class JwtUtil {
 		}
 	}
 	
-	// 토큰을 기반으로 유저 ID를 가져오는 메소드입니다. 
+	// 토큰을 기반으로 유저 Email을 가져오는 메소드입니다. 
 	// 토큰에 들어있는 Claims를 추출하고, 
 	// Claims안에서 id를 꺼내야 하므로 아래 getClaims함수를 활용합니다.
-	public Long getUserId(String token) {
+	public String getUserEmail(String token) {
 		Claims claims = getClaims(token);
-		return claims.get("id",Long.class);
+		return (String)claims.get("email");
 	}
 	
 	
