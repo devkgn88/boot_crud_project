@@ -48,12 +48,12 @@ public class WebSecurityConfig {
 							.requestMatchers("/login","/signup","/member").permitAll()
 							.anyRequest().authenticated())
 //			.requestCache(cache -> cache.requestCache(requestCache))
-			.formLogin(login -> login
-					.loginPage("/login")
-					.defaultSuccessUrl("/article")
-					.successHandler(new MyLoginSuccessHandler()))
-//			.formLogin(AbstractHttpConfigurer::disable)
-//			.httpBasic(AbstractHttpConfigurer::disable)
+//			.formLogin(login -> login
+//					.loginPage("/login")
+//					.defaultSuccessUrl("/article")
+//					.successHandler(new MyLoginSuccessHandler()))
+			.formLogin(AbstractHttpConfigurer::disable)
+			.httpBasic(AbstractHttpConfigurer::disable)
 			.logout(logout -> logout
 					.logoutSuccessUrl("/login")
 					.invalidateHttpSession(true))
