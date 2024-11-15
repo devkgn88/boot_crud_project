@@ -1,5 +1,6 @@
 # Created by https://www.toptal.com/developers/gitignore/api/java,windows,eclipse,intellij+all,gradle
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,windows,eclipse,intellij+all,gradle
+.env
 HELP.md
 .gradle
 build/
