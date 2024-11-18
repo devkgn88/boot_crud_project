@@ -5,11 +5,13 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -59,6 +61,17 @@ public class WebSecurityConfig {
 					.invalidateHttpSession(true))
 			.addFilterBefore(new JwtAuthFilter(memberDetailService,jwtUtil), 
 				UsernamePasswordAuthenticationFilter.class);
+		
+		// csrf, cors 끄기
+		http.csrf(AbstractHttpConfigurer::disable);
+		http.cors((Customizer.withDefaults()));
+		
+		// 더이상 세션 인증 방식을 사용하지 않기 때문에 세션 관리를 꺼줍니다.
+		http.sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(
+				SessionCreationPolicy.STATELESS));
+		
+		// SpringSecurity가 자동으로 생성해주는 
+		
 		
 		return http.build();
 	}
