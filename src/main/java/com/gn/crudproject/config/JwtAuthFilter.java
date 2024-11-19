@@ -1,6 +1,7 @@
 package com.gn.crudproject.config;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,7 +14,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 
 // Spring Security가 사용할 필터입니다. 
 // 요청이 들어올 때마다 Jwt의 유효성을 검사하고,
@@ -79,5 +79,14 @@ public class JwtAuthFilter extends OncePerRequestFilter{
 		filterChain.doFilter(request, response);
 		
 	}
+
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String[] excludePath = {"/login"};
+        String path = request.getRequestURI();
+        return Arrays.stream(excludePath).anyMatch(path::startsWith);
+	}
+	
+	
 	
 }

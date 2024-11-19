@@ -30,6 +30,12 @@ public class WebSecurityConfig {
 	
 	@Autowired
 	private JwtUtil jwtUtil;
+	
+	@Autowired
+	private CustomAccessDeniedHandler accessDeniedHandler;
+	
+	@Autowired
+	private CustomAuthenticationEntryPoint authenticationEntryPoint;
 
 	
 	// 정적 리소스에 스프링 시큐리티를 비활성화합니다. 
@@ -37,7 +43,8 @@ public class WebSecurityConfig {
 	@Bean
 	WebSecurityCustomizer configure() {
 		return (web -> web.ignoring()
-					.requestMatchers(PathRequest.toStaticResources().atCommonLocations()));
+					.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+					);
 	}
 	
 	// 특정 HTTP 요청이 들어왔을 때 보안 관련 사항을 설정합니다.
@@ -46,21 +53,21 @@ public class WebSecurityConfig {
 //		HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
 //		requestCache.setMatchingRequestParameterName(null);
 		
-		http.authorizeHttpRequests(requests -> requests
-							.requestMatchers("/login","/signup","/member").permitAll()
-							.anyRequest().authenticated())
+//		http.authorizeHttpRequests(requests -> requests
+//							.requestMatchers("/login","/signup","/member").permitAll()
+//							.anyRequest().authenticated())
 //			.requestCache(cache -> cache.requestCache(requestCache))
 //			.formLogin(login -> login
 //					.loginPage("/login")
 //					.defaultSuccessUrl("/article")
 //					.successHandler(new MyLoginSuccessHandler()))
-			.formLogin(AbstractHttpConfigurer::disable)
-			.httpBasic(AbstractHttpConfigurer::disable)
-			.logout(logout -> logout
-					.logoutSuccessUrl("/login")
-					.invalidateHttpSession(true))
-			.addFilterBefore(new JwtAuthFilter(memberDetailService,jwtUtil), 
-				UsernamePasswordAuthenticationFilter.class);
+//			.formLogin(AbstractHttpConfigurer::disable)
+//			.httpBasic(AbstractHttpConfigurer::disable)
+//			.logout(logout -> logout
+//					.logoutSuccessUrl("/login")
+//					.invalidateHttpSession(true))
+//			.addFilterBefore(new JwtAuthFilter(memberDetailService,jwtUtil), 
+//				UsernamePasswordAuthenticationFilter.class);
 		
 		// csrf, cors 끄기
 		http.csrf(AbstractHttpConfigurer::disable);
@@ -70,8 +77,22 @@ public class WebSecurityConfig {
 		http.sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(
 				SessionCreationPolicy.STATELESS));
 		
-		// SpringSecurity가 자동으로 생성해주는 
+		// SpringSecurity가 자동으로 생성해주는 로그인 폼을 비활성화합니다. 
+		http.formLogin(AbstractHttpConfigurer::disable);
+		http.httpBasic(AbstractHttpConfigurer::disable);
 		
+		// JwtAuthFilter를 UsernamePasswordAuthenticationFilter가 동작하기 전에 동작하도록 설정합니다.
+		http.addFilterBefore(new JwtAuthFilter(memberDetailService, jwtUtil), 
+				UsernamePasswordAuthenticationFilter.class);
+		
+		// 인증, 인가 단계에서 오류가 발생했을 때의 동작을 지정해줍니다. 
+		http.exceptionHandling((exceptionHandling) -> exceptionHandling.authenticationEntryPoint(
+				authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler));
+		
+		// 권한 규칙을 작성해줍니다. 
+		http.authorizeHttpRequests(requests -> requests
+		.requestMatchers("/login","/signup","/member").permitAll()
+		.anyRequest().authenticated());
 		
 		return http.build();
 	}

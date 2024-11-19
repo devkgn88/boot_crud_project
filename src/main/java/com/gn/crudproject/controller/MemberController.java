@@ -6,7 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.gn.crudproject.config.JwtUtil;
-import com.gn.crudproject.dto.LoginRequestDto;
 import com.gn.crudproject.dto.MemberDto;
 import com.gn.crudproject.entity.Member;
 import com.gn.crudproject.repository.MemberRepository;
@@ -52,21 +51,36 @@ public class MemberController {
 		return "member/login";
 	}
 	
+	// 로그인 기능
 	@PostMapping("/login")
-	public ResponseEntity<String> loginApi(@RequestBody LoginRequestDto dto){
+	@ResponseBody 
+	public ResponseEntity<Map<String,String>> loginApi(@RequestBody MemberDto dto){	
+		Map<String,String> resultMap = new HashMap<String,String>();
+		resultMap.put("res_code", "404");
+		resultMap.put("res_msg", "로그인중 오류가 발생했습니다.");
+		
 		String email = dto.getEmail();
 		String password = dto.getPassword();
+		
 		Member member = memberRepository.findByEmail(email);
 		if(member == null) {
-			throw new UsernameNotFoundException("xx");
+			throw new UsernameNotFoundException("이메일이 존재하지 않습니다.");
 		}
 		
+		// 암호화된 password를 디코딩한 값과 입력한 패스워드의 값이 다르면 null을 반환합니다.
 		if(!encoder.matches(password, member.getPassword())) {
-			throw new BadCredentialsException("비번틀림");
+			throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
 		}
+
+		String token = jwtUtil.generateToken(member);
 		
-		//String token = jwtUtil.generateToken(member);
-		return ResponseEntity.status(HttpStatus.OK).body("");
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", "Bearer "+token);
+		
+		resultMap.put("res_code", "200");
+		resultMap.put("res_msg", "로그인되었습니다. 환영합니다.");
+
+		return ResponseEntity.ok().headers(httpHeaders).body(resultMap);
 		
 	}
 	
